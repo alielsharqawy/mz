@@ -88,7 +88,7 @@ export default function EmployeeLogin() {
                 id="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base"
+               className="pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black px-4 py-3"
                 placeholder="Enter your email"
                 required
               />
@@ -110,7 +110,7 @@ export default function EmployeeLogin() {
                 id="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base"
+               className="pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black px-4 py-3"
                 placeholder="Enter your password"
                 required
               />
