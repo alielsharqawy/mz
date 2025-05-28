@@ -1,133 +1,35 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const router = useRouter()
-  const [selectedRole, setSelectedRole] = useState<'admin' | 'employee' | null>(null)
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
-    try {
-      const endpoint = selectedRole === 'admin' 
-        ? 'https://form.legendsagencystuff.com/api/login'
-        : 'https://form.legendsagencystuff.com/api/employee/login'
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: new URLSearchParams(formData)
-      })
-
-      const data = await response.json()
-
-      if (data.key === 'success') {
-        localStorage.setItem('token', data.data.token)
-        localStorage.setItem('role', selectedRole === 'admin' ? 'manager' : 'employee')
-        router.push(selectedRole === 'admin' ? '/manager/dashboard' : '/employee/dashboard')
-        return
-      }
-
-      setError('Invalid credentials')
-    } catch (err) {
-      setError('An error occurred. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (!selectedRole) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-black">
-        <div className="bg-white p-8 rounded-lg shadow-md w-96">
-          <h1 className="text-2xl font-bold text-center mb-6">Select Login Type</h1>
-          <div className="space-y-4">
-            <button
-              onClick={() => setSelectedRole('admin')}
-              className="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              Login as Admin
-            </button>
-            <button
-              onClick={() => setSelectedRole('employee')}
-              className="w-full bg-green-500 text-white py-3 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Login as Employee
-            </button>
-          </div>
-        </div>
-      </main>
-    )
-  }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-black">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Login</h1>
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
+      <div className="bg-white p-8 rounded-xl shadow-2xl w-96">
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">Welcome</h1>
+        <p className="text-gray-600 text-center mb-8">Please select your role to continue</p>
+        <div className="space-y-4">
           <button
-            onClick={() => setSelectedRole(null)}
-            className="text-sm text-black hover:text-gray-800"
+            onClick={() => router.push('/manager/login')}
+            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-all hover:scale-105 flex items-center justify-center space-x-2"
           >
-            Change Role
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span>Manager</span>
+          </button>
+          <button
+            onClick={() => router.push('/employee/login')}
+            className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transform transition-all hover:scale-105 flex items-center justify-center space-x-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span>Employee</span>
           </button>
         </div>
-        
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-black">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="mt-1 block w-full rounded-md border-black shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-black">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="mt-1 block w-full rounded-md border-black shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
       </div>
     </main>
   )
