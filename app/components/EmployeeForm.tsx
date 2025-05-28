@@ -3,13 +3,20 @@
 import { useState } from 'react'
 import { ResponsiveFormGroup, ResponsiveButtonGroup } from './ResponsiveLayout'
 
+interface FormData {
+  name: string
+  email: string
+  position: string
+  department: string
+}
+
 interface EmployeeFormProps {
-  onSubmit: (data: any) => void
-  initialData?: any
+  onSubmit: (data: FormData) => void
+  initialData?: FormData
 }
 
 export default function EmployeeForm({ onSubmit, initialData }: EmployeeFormProps) {
-  const [formData, setFormData] = useState(initialData || {
+  const [formData, setFormData] = useState<FormData>(initialData || {
     name: '',
     email: '',
     position: '',

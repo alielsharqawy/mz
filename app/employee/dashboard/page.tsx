@@ -28,7 +28,7 @@ export default function EmployeeDashboard() {
     }
 
     fetchData()
-  }, [])
+  }, [router])
 
   const fetchData = async () => {
     setLoading(true)
@@ -40,7 +40,7 @@ export default function EmployeeDashboard() {
       ])
       setForms(formsData)
       setNotifications(notificationsData)
-    } catch (err) {
+    } catch {
       showError('An error occurred while fetching data')
       setError('An error occurred while fetching data')
     } finally {
@@ -56,7 +56,7 @@ export default function EmployeeDashboard() {
       setShowNewForm(false)
       await fetchData()
       showSuccess('Form created successfully')
-    } catch (err) {
+    } catch {
       showError('Failed to create form')
       setError('Failed to create form')
     }
@@ -72,7 +72,7 @@ export default function EmployeeDashboard() {
         localStorage.removeItem('role')
         showSuccess('Logged out successfully')
         router.push('/')
-      } catch (err) {
+      } catch {
         showError('Failed to logout')
         setError('Failed to logout')
       }
@@ -177,4 +177,4 @@ export default function EmployeeDashboard() {
       </main>
     </div>
   )
-} 
+}

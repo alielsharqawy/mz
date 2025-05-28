@@ -31,10 +31,16 @@ export const getEmployeeForm = async (formId: number): Promise<Form> => {
 }
 
 export const createEmployeeForm = async (formData: NewFormData): Promise<void> => {
+  // Fixed the type issue by converting `formData` to a compatible format
+  const formattedData = Object.entries(formData).reduce((acc, [key, value]) => {
+    acc[key] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+
   const response = await fetch(`${API_BASE_URL}/employee/forms`, {
     method: 'POST',
     headers: getAuthHeaders(),
-    body: new URLSearchParams(formData)
+    body: new URLSearchParams(formattedData)
   })
   const data = await response.json()
   if (data.key !== 'success') {

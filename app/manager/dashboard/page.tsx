@@ -1,11 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Form, Notification, Employee } from '../../types'
-import { fetchManagerForms, fetchManagerNotifications, managerLogout } from '../../services/api'
-import { FormTable } from '../../components/forms/FormTable'
-import { NotificationList } from '../../components/notifications/NotificationList'
+import { Employee, Form } from '../../types'
+import { managerLogout } from '../../services/api'
 import { showSuccess, showError, showConfirm, showLoading, closeLoading } from '../../services/notifications'
 
 export default function ManagerDashboard() {
@@ -25,6 +23,25 @@ export default function ManagerDashboard() {
     password: ''
   })
 
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    showLoading()
+    try {
+      await Promise.all([
+        fetchForms(),
+        fetchPendingForms(),
+        fetchEmployees(),
+        fetchNotifications()
+      ])
+    } catch {
+      showError('An error occurred while fetching data')
+      setError('An error occurred while fetching data')
+    } finally {
+      setLoading(false)
+      closeLoading()
+    }
+  }, [])
+
   useEffect(() => {
     const token = localStorage.getItem('token')
     const role = localStorage.getItem('role')
@@ -35,26 +52,7 @@ export default function ManagerDashboard() {
     }
 
     fetchData()
-  }, [])
-
-  const fetchData = async () => {
-    setLoading(true)
-    showLoading()
-    try {
-      await Promise.all([
-        fetchForms(),
-        fetchPendingForms(),
-        fetchEmployees(),
-        fetchNotifications()
-      ])
-    } catch (err) {
-      showError('An error occurred while fetching data')
-      setError('An error occurred while fetching data')
-    } finally {
-      setLoading(false)
-      closeLoading()
-    }
-  }
+  }, [router, fetchData])
 
   const fetchForms = async () => {
     const response = await fetch('https://form.legendsagencystuff.com/api/forms', {
@@ -128,7 +126,7 @@ export default function ManagerDashboard() {
         showSuccess('Form approved successfully')
         fetchData()
       }
-    } catch (err) {
+    } catch {
       showError('Failed to approve form')
       setError('Failed to approve form')
     }
@@ -152,7 +150,7 @@ export default function ManagerDashboard() {
           showSuccess('Form rejected successfully')
           fetchData()
         }
-      } catch (err) {
+      } catch {
         showError('Failed to reject form')
         setError('Failed to reject form')
       }
@@ -179,7 +177,7 @@ export default function ManagerDashboard() {
         setNewEmployee({ name: '', email: '', password: '' })
         fetchEmployees()
       }
-    } catch (err) {
+    } catch {
       showError('Failed to create employee')
       setError('Failed to create employee')
     }
@@ -207,7 +205,7 @@ export default function ManagerDashboard() {
         setNewEmployee({ name: '', email: '', password: '' })
         fetchEmployees()
       }
-    } catch (err) {
+    } catch {
       showError('Failed to update employee')
       setError('Failed to update employee')
     }
@@ -231,7 +229,7 @@ export default function ManagerDashboard() {
           showSuccess('Employee deleted successfully')
           fetchEmployees()
         }
-      } catch (err) {
+      } catch {
         showError('Failed to delete employee')
         setError('Failed to delete employee')
       }
@@ -248,8 +246,7 @@ export default function ManagerDashboard() {
         localStorage.removeItem('role')
         showSuccess('Logged out successfully')
         router.push('/')
-      } catch (err) {
-        console.log(err)
+      } catch {
         showError('Failed to logout')
         setError('Failed to logout')
       }
@@ -667,4 +664,4 @@ export default function ManagerDashboard() {
       </main>
     </div>
   )
-} 
+}

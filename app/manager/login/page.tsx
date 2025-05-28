@@ -34,7 +34,7 @@ export default function ManagerLogin() {
       }
 
       setError('Invalid credentials')
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -143,4 +143,4 @@ export default function ManagerLogin() {
       </div>
     </main>
   )
-} 
+}

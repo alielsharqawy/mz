@@ -1,6 +1,6 @@
 'use client'
 
-import { ResponsiveTableContainer, ResponsiveCard } from './ResponsiveLayout'
+import { ResponsiveTableContainer } from './ResponsiveLayout'
 
 interface Employee {
   id: string
